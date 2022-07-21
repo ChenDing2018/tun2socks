@@ -24,12 +24,12 @@ const (
 )
 
 var (
-	//HelloCnWintunRequestedGUID = &windows.GUID{
-	//	Data1: 0xf689d7c9,
-	//	Data2: 0x6f2f,
-	//	Data3: 0x436b,
-	//	Data4: [8]byte{0x8a, 0x53, 0xe5, 0x4f, 0xe3, 0x51, 0xc3, 0x22},
-	//}
+	WintunRequestedGUID = &windows.GUID{
+		Data1: 0xf689d7c9,
+		Data2: 0x6f2f,
+		Data3: 0x436b,
+		Data4: [8]byte{0x8a, 0x53, 0xe5, 0x4f, 0xe3, 0x51, 0xc3, 0x22},
+	}
 
 	//DefaultDnsToSet = []netip.Addr{
 	//	netip.MustParseAddr("114.114.114.114"),
@@ -71,7 +71,8 @@ func Open(name string, mtu uint32, proxyIp string, dns, routes []string) (_ devi
 		forcedMTU = int(mtu)
 	}
 
-	nt, err := tun.CreateTUN(name, forcedMTU)
+	//nt, err := tun.CreateTUN(name, forcedMTU)
+	nt, err := tun.CreateTUNWithRequestedGUID(name, WintunRequestedGUID, forcedMTU)
 	if err != nil {
 		return nil, fmt.Errorf("create tun: %w", err)
 	}
