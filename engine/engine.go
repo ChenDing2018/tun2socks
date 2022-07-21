@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"runtime"
 	"sync"
 	"time"
 
@@ -73,6 +74,9 @@ func start() error {
 		if err := f(_defaultKey); err != nil {
 			return err
 		}
+	}
+	if runtime.GOOS == "windows" {
+		_defaultDevice.AddRoute()
 	}
 	_engineMu.Unlock()
 	return nil
@@ -162,9 +166,10 @@ func netstack(k *Key) (err error) {
 	if _defaultProxy, err = parseProxy(k.Proxy); err != nil {
 		return
 	}
+	var proxyIp, _, _ = net.SplitHostPort(_defaultProxy.Addr())
 	proxy.SetDialer(_defaultProxy)
 
-	if _defaultDevice, err = parseDevice(k.Device, uint32(k.MTU)); err != nil {
+	if _defaultDevice, err = parseDevice(k.Device, uint32(k.MTU), proxyIp, k.Dns, k.Routes); err != nil {
 		return
 	}
 

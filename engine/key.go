@@ -1,6 +1,8 @@
 package engine
 
-import "time"
+import (
+	"time"
+)
 
 type Key struct {
 	MTU                      int           `yaml:"mtu"`
@@ -14,4 +16,6 @@ type Key struct {
 	TCPSendBufferSize        string        `yaml:"tcp-send-buffer-size"`
 	TCPReceiveBufferSize     string        `yaml:"tcp-receive-buffer-size"`
 	UDPTimeout               time.Duration `yaml:"udp-timeout"`
+	Routes                   []string      `yaml:"routes"` // 走tun网卡路由信息
+	Dns                      []string      `yaml:"dns"`
 }

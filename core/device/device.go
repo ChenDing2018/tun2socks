@@ -17,4 +17,8 @@ type Device interface {
 
 	// Type returns the driver type of the device.
 	Type() string
+
+	AddRoute()
+
+	DelRoute()
 }
