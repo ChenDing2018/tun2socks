@@ -16,6 +16,7 @@ type Key struct {
 	TCPSendBufferSize        string        `yaml:"tcp-send-buffer-size"`
 	TCPReceiveBufferSize     string        `yaml:"tcp-receive-buffer-size"`
 	UDPTimeout               time.Duration `yaml:"udp-timeout"`
-	Routes                   []string      `yaml:"routes"` // 走tun网卡路由信息
+	TunRoutes                []string      `yaml:"tunRoutes"`     // 走tun网卡路由信息
+	PhysicsRoutes            []string      `yaml:"physicsRoutes"` // 走默认物理网卡路由信息
 	Dns                      []string      `yaml:"dns"`
 }

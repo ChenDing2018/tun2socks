@@ -169,7 +169,7 @@ func netstack(k *Key) (err error) {
 	var proxyIp, _, _ = net.SplitHostPort(_defaultProxy.Addr())
 	proxy.SetDialer(_defaultProxy)
 
-	if _defaultDevice, err = parseDevice(k.Device, uint32(k.MTU), proxyIp, k.Dns, k.Routes); err != nil {
+	if _defaultDevice, err = parseDevice(k.Device, uint32(k.MTU), proxyIp, k.Dns, k.TunRoutes, k.PhysicsRoutes); err != nil {
 		return
 	}
 

@@ -41,7 +41,7 @@ func parseRestAPI(s string) (*url.URL, error) {
 	}
 }
 
-func parseDevice(s string, mtu uint32, proxyIp string, dns, routes []string) (device.Device, error) {
+func parseDevice(s string, mtu uint32, proxyIp string, dns, tunRoutes, physicsRoutes []string) (device.Device, error) {
 	if !strings.Contains(s, "://") {
 		s = fmt.Sprintf("%s://%s", tun.Driver /* default driver */, s)
 	}
@@ -58,7 +58,7 @@ func parseDevice(s string, mtu uint32, proxyIp string, dns, routes []string) (de
 	case fdbased.Driver:
 		return fdbased.Open(name, mtu)
 	case tun.Driver:
-		return tun.Open(name, mtu, proxyIp, dns, routes)
+		return tun.Open(name, mtu, proxyIp, dns, tunRoutes, physicsRoutes)
 	default:
 		return nil, fmt.Errorf("unsupported driver: %s", driver)
 	}

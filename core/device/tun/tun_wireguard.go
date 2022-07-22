@@ -59,7 +59,7 @@ func init() {
 		return
 	}
 }
-func Open(name string, mtu uint32, proxyIp string, dns, routes []string) (_ device.Device, err error) {
+func Open(name string, mtu uint32, proxyIp string, dns, tRoutes, pRoutes []string) (_ device.Device, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			err = fmt.Errorf("open tun: %v", r)
@@ -99,12 +99,18 @@ func Open(name string, mtu uint32, proxyIp string, dns, routes []string) (_ devi
 		dnsSet = append(dnsSet, netip.MustParseAddr(d))
 		physicsRoutes = append(physicsRoutes, wireguard_route.NewWinRoute(defRoute.InterfaceLUID, d, defRoute.NextHop, 1))
 	}
+	// 走默认路由对应的物理网卡
 	physicsRoutes = append(physicsRoutes, wireguard_route.NewWinRoute(defRoute.InterfaceLUID, proxyIp, defRoute.NextHop, 1))
-	if len(routes) == 0 {
+	if len(pRoutes) != 0 {
+		for _, r := range pRoutes {
+			physicsRoutes = append(physicsRoutes, wireguard_route.NewWinRoute(defRoute.InterfaceLUID, r, defRoute.NextHop, 1))
+		}
+	}
+	if len(tRoutes) == 0 {
 		route := wireguard_route.NewWinRoute(winipcfg.LUID(nat.LUID()), defRouteIp, wintunGw, 1)
 		tunRoutes = append(tunRoutes, route)
 	} else {
-		for _, r := range routes {
+		for _, r := range tRoutes {
 			tunRoutes = append(tunRoutes, wireguard_route.NewWinRoute(winipcfg.LUID(nat.LUID()), r, wintunGw, 1))
 		}
 	}
