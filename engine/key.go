@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"github.com/xjasonlyu/tun2socks/v2/config"
 	"time"
 )
 
@@ -19,4 +20,20 @@ type Key struct {
 	TunRoutes                []string      `yaml:"tunRoutes"`     // 走tun网卡路由信息
 	PhysicsRoutes            []string      `yaml:"physicsRoutes"` // 走默认物理网卡路由信息
 	Dns                      []string      `yaml:"dns"`
+}
+
+func NewConfigKey(config *config.Config) *Key {
+
+	udpTimeout := config.General.UdpTimeout
+	ut := time.Duration(udpTimeout) * time.Second
+	return &Key{
+		MTU:           config.General.Mtu,
+		Device:        config.General.Device,
+		LogLevel:      config.General.LogLevel,
+		Dns:           config.Dns,
+		TunRoutes:     config.TunRoutes,
+		PhysicsRoutes: config.PhysicsRoutes,
+		Proxy:         config.Proxy,
+		UDPTimeout:    ut,
+	}
 }

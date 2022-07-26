@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/xjasonlyu/tun2socks/v2/config"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	_ "github.com/xjasonlyu/tun2socks/v2/dns"
@@ -49,7 +51,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	if configFile != "" {
+	// yml 文件解析
+	if configFile != "" && strings.HasSuffix(configFile, ".yml") {
 		data, err := os.ReadFile(configFile)
 		if err != nil {
 			log.Fatalf("Failed to read config file '%s': %v", configFile, err)
@@ -57,6 +60,14 @@ func main() {
 		if err = yaml.Unmarshal(data, key); err != nil {
 			log.Fatalf("Failed to unmarshal config file '%s': %v", configFile, err)
 		}
+	}
+
+	if configFile != "" && !strings.HasSuffix(configFile, ".yml") {
+		parseConfig, err := config.ParseConfig(configFile)
+		if err != nil {
+			log.Fatalf("Failed to read config file '%s': %v", configFile, err)
+		}
+		key = engine.NewConfigKey(parseConfig)
 	}
 
 	engine.Insert(key)
