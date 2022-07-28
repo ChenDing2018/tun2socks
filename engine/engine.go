@@ -39,6 +39,16 @@ var (
 	_defaultStack *stack.Stack
 )
 
+// Tun2socksStart starts the default engine up.
+func Tun2socksStart() error {
+	return start()
+}
+
+// Tun2socksStop shuts the default engine down.
+func Tun2socksStop() error {
+	return stop()
+}
+
 // Start starts the default engine up.
 func Start() {
 	if err := start(); err != nil {
