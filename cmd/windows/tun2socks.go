@@ -8,6 +8,7 @@ import (
 	"go.uber.org/automaxprocs/maxprocs"
 	"gopkg.in/yaml.v3"
 	"os"
+	"os/exec"
 	"os/signal"
 	"strings"
 	"syscall"
@@ -76,6 +77,27 @@ func tun2socksStop() bool {
 	return true
 }
 
+//export unrestrictedUwp
+func unrestrictedUwp() bool {
+	powershell := exec.Command("powershell", "foreach ($n in (get-appxpackage).packagefamilyname) {checknetisolation loopbackexempt -a -n=\"$n\"}") // cmd := exec.Command("powershell")
+	err := powershell.Run()
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+//export restUwp
+func restUwp() bool {
+	powershell := exec.Command("powershell", "foreach ($n in (get-appxpackage).packagefamilyname) {checknetisolation loopbackexempt -d -n=\"$n\"}") // cmd := exec.Command("powershell")
+	err := powershell.Run()
+	if err != nil {
+		return false
+	}
+	return true
+}
 func main() {
 	// Need a main function to make CGO compile package as C shared library
 }
+
+//  go build -buildmode=c-shared -o tun2socks.dll .\cmd\windows\tun2socks.go
