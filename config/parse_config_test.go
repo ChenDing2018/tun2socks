@@ -2,22 +2,19 @@ package config
 
 import (
 	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
+	"golang.org/x/sys/windows/registry"
+	"os/exec"
 	"testing"
 )
 
 func TestParseConfig(t *testing.T) {
 
-	go func() {
-		os.Exit(1)
-	}()
-
-	sigCh := make(chan os.Signal, 1)
-	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-
-	<-sigCh
-
-	fmt.Println("aaaa")
+	key, _ := registry.OpenKey(registry.CURRENT_USER, "SOFTWARE\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\CurrentVersion\\AppContainer\\Mappings", registry.ALL_ACCESS)
+	subNames, _ := key.ReadSubKeyNames(0)
+	for _, name := range subNames {
+		arg := fmt.Sprintf("checkNetIsolation loopbackExempt -d -p=%s", name)
+		fmt.Println(arg)
+		command := exec.Command("cmd", "/c", arg)
+		command.Run()
+	}
 }

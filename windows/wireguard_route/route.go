@@ -89,8 +89,8 @@ func (wr *WinRoute) AddRoute() {
 func (wr *WinRoute) DeleteRoute() {
 	dest, _ := netip.ParsePrefix(wr.DestIpPrefix)
 	err := wr.InterfaceLUID.DeleteRoute(dest, netip.MustParseAddr(wr.NextHop))
-	if err != nil {
-		log.Fatalf("delete route fail; err:%s", err)
+	if err != nil{
+		log.Warnf("delete route fail; err:%s", err)
 	}
 	log.Debugf("delete route success; dst:%s ,next:%s", wr.DestIpPrefix, wr.NextHop)
 }

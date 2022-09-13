@@ -71,8 +71,8 @@ func Open(name string, mtu uint32, proxyIp string, dns, tRoutes, pRoutes []strin
 		forcedMTU = int(mtu)
 	}
 
-	//nt, err := tun.CreateTUN(name, forcedMTU)
-	nt, err := tun.CreateTUNWithRequestedGUID(name, WintunRequestedGUID, forcedMTU)
+	nt, err := tun.CreateTUN(name, forcedMTU)
+	//nt, err := tun.CreateTUNWithRequestedGUID(name, WintunRequestedGUID, forcedMTU)
 	if err != nil {
 		return nil, fmt.Errorf("create tun: %w", err)
 	}
